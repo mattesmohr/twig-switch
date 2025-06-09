@@ -1,0 +1,4 @@
+{
+  "name":  "mattesmohr/twig-switch",
+  "description": "Provides a switch tag for Twig"
+}
