@@ -1,5 +1,7 @@
 <?php
 
+namespace mattesmohr\TwigSwitch;
+
 class SwitchTwigExtension extends \Twig\Extension\AbstractExtension {
 
     public function getTokenParsers() {

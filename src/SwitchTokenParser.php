@@ -1,5 +1,7 @@
 <?php
 
+namespace mattesmohr\TwigSwitch;
+
 class SwitchTokenParser extends \Twig\TokenParser\AbstractTokenParser {
 
     public function parse(\Twig\Token $token) {

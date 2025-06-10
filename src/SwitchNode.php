@@ -1,5 +1,7 @@
 <?php
 
+namespace mattesmohr\TwigSwitch;
+
 class SwitchNode extends \Twig\Node\Node {
 
     public function __construct($name, \Twig\Node\Node $tests, ?\Twig\Node\Node $default, $line) {

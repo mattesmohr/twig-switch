@@ -1,4 +1,9 @@
 {
   "name":  "mattesmohr/twig-switch",
-  "description": "Provides a switch tag for Twig"
+  "description": "Provides a switch tag for Twig",
+  "autoload": {
+    "psr-4": {
+      "mattesmohr\\TwigSwitch\\": "src/"
+    }
+  }
 }
