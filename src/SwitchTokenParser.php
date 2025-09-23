@@ -8,16 +8,19 @@ class SwitchTokenParser extends \Twig\TokenParser\AbstractTokenParser {
 
         $stream = $this->parser->getStream();
 
-        // The variable name, which is used for the context
-        $name = $stream->expect(\Twig\Token::NAME_TYPE)->getValue();
+        $expression = [];
+
+        // Capture the entire switch expression
+        $expression[] = $this->parser->getExpressionParser()->parseExpression();
 
         $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
         // Parse till you hit one of the symbols
-        $this->parser->subparse([$this, 'decideIfFork']);
+        $this->parser->subparse([$this, 'decideCaseBranch']);
 
         $cases = [];
-        $default = [];
+
+        $default = null;
 
         $continue = true;
 
@@ -31,7 +34,7 @@ class SwitchTokenParser extends \Twig\TokenParser\AbstractTokenParser {
                     $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
                     // Parse the body of the case
-                    $cases[] = $this->parser->subparse([$this, 'decideIfFork']);
+                    $cases[] = $this->parser->subparse([$this, 'decideCaseBranch']);
 
                     break;
 
@@ -40,7 +43,7 @@ class SwitchTokenParser extends \Twig\TokenParser\AbstractTokenParser {
                     $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
                     /// Parse the body of the default
-                    $default[] = $this->parser->subparse([$this, 'decideIfEnd']);;
+                    $default = $this->parser->subparse([$this, 'decideSwitchEnd']);;
 
                     break;
 
@@ -57,14 +60,14 @@ class SwitchTokenParser extends \Twig\TokenParser\AbstractTokenParser {
 
         $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
-        return new SwitchNode($name, new \Twig\Node\Node($cases), new \Twig\Node\Node($default), $token->getLine());
+        return new SwitchNode(new \Twig\Node\Node($expression), new \Twig\Node\Node($cases), $default, $token->getLine());
     }
 
-    public function decideIfFork(\Twig\Token $token) {
+    public function decideCaseBranch(\Twig\Token $token) {
         return $token->test(['case', 'default', 'endswitch']);
     }
 
-    public function decideIfEnd(\Twig\Token $token) {
+    public function decideSwitchEnd(\Twig\Token $token) {
         return $token->test(['endswitch']);
     }
 

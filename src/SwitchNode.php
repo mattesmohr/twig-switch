@@ -4,8 +4,8 @@ namespace mattesmohr\TwigSwitch;
 
 class SwitchNode extends \Twig\Node\Node {
 
-    public function __construct($name, \Twig\Node\Node $tests, ?\Twig\Node\Node $default, $line) {
-        parent::__construct(['tests' => $tests, 'default' => $default], ['name' => $name], $line);
+    public function __construct(\Twig\Node\Node $expression, \Twig\Node\Node $cases, ?\Twig\Node\Node $default, $line) {
+        parent::__construct(['expression' => $expression, 'cases' => $cases, 'default' => $default], [], $line);
     }
 
     public function compile(\Twig\Compiler $compiler) {
@@ -13,20 +13,21 @@ class SwitchNode extends \Twig\Node\Node {
         $compiler->addDebugInfo($this);
 
         $compiler
-            ->write('switch ($context[\''.$this->getAttribute('name').'\']')
+            ->write('switch (')
+            ->subcompile($this->getNode('expression'))
             ->raw(") {\n")
             ->indent();
 
-        for ($i = 0, $count = \count($this->getNode('tests')); $i < $count; $i += 2) {
+        for ($i = 0, $count = \count($this->getNode('cases')); $i < $count; $i += 2) {
 
             $compiler
                 ->write('case ')
-                ->subcompile($this->getNode('tests')->getNode((string) $i))
+                ->subcompile($this->getNode('cases')->getNode((string) $i))
                 ->raw(":\n");
 
             $compiler
                 ->indent()
-                ->subcompile($this->getNode('tests')->getNode((string) ($i + 1)))
+                ->subcompile($this->getNode('cases')->getNode((string) ($i + 1)))
                 ->write("break;\n")
                 ->outdent();
         }
