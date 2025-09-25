@@ -5,7 +5,14 @@ namespace mattesmohr\TwigSwitch;
 class SwitchNode extends \Twig\Node\Node {
 
     public function __construct(\Twig\Node\Node $expression, \Twig\Node\Node $cases, ?\Twig\Node\Node $default, $line) {
-        parent::__construct(['expression' => $expression, 'cases' => $cases, 'default' => $default], [], $line);
+
+        $nodes = ['expression' => $expression, 'cases' => $cases];
+
+        if ($default !== null) {
+            $nodes['default'] = $default;
+        }
+
+        parent::__construct($nodes, [], $line);
     }
 
     public function compile(\Twig\Compiler $compiler) {

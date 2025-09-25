@@ -8,10 +8,8 @@ class SwitchTokenParser extends \Twig\TokenParser\AbstractTokenParser {
 
         $stream = $this->parser->getStream();
 
-        $expression = [];
-
         // Capture the entire switch expression
-        $expression[] = $this->parser->getExpressionParser()->parseExpression();
+        $expression = $this->parser->getExpressionParser()->parseExpression();
 
         $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
@@ -60,7 +58,7 @@ class SwitchTokenParser extends \Twig\TokenParser\AbstractTokenParser {
 
         $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
-        return new SwitchNode(new \Twig\Node\Node($expression), new \Twig\Node\Node($cases), $default, $token->getLine());
+        return new SwitchNode($expression, new \Twig\Node\Node($cases), $default, $token->getLine());
     }
 
     public function decideCaseBranch(\Twig\Token $token) {

@@ -17,7 +17,7 @@ A switch tag evaluates the expression and executes the matching case.
 
 ### What else?
 
-The default clause handles the cases not explicitly listed.
+The default clause is optional and handles the cases not explicitly listed.
 
 ### And?
 
